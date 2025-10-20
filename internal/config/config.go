@@ -45,3 +45,96 @@ type LoggingConfig struct {
 	MaxFileSizeMB	int			`yaml:"max_file_size_mb"`
 	MaxBackups		int			`yaml:"max_backups"`
 }
+
+func GetDefaultConfig() *Config {
+	return &Config{
+		MonitoringInterval: 5,
+		CPU: CPUAlert {
+						Enabled: true,
+						ThresholdPercent: 85.0,
+						DurationSeconds: 30,
+		},
+		Memory: MemoryAlert {
+						Enabled: true,
+						OverallThresholdPercent: 90.0,
+						ProcessThresholdBytes: 4294967296, // 4GB
+		},
+		Disk: DiskAlert {
+						Enabled: true,
+						MinimumFreeGB: 20.0,
+		},
+		Cooldown: CooldownConfig {
+						DurationMinutes: 5,
+						QuietHoursStart: "23:00",
+						QuietHoursEnd: "07:00",
+		},
+		Logging: LoggingConfig {
+						Enabled: true,
+						Level: "info",
+						MaxFileSizeMB: 10,
+						MaxBackups: 3,
+		},
+	} 
+}
+
+func GetConfigPath() (string, error) {
+	appData := os.Getenv("APPDATA")
+	if appData == "" {
+		return "", fmt.Errorf("APPDATA environment variable not set")
+	}
+
+	configDir := filepath.Join(appData, "Laptop Monitor")
+	configPath := filepath.Join(configDir, "config.yaml")
+
+	return configPath, nil
+}
+
+func Load() (*Config, error) {
+	configPath, err := GetConfigPath()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		cfg := GetDefaultConfig()
+		if err := Save(cfg); err != nil {
+			return nil, fmt.Errorf("failed to create default config: %w", err)
+		}
+		return cfg, nil
+	}
+
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read config file: %w", err)
+	}
+
+	var cfg Config
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		return nil, fmt.Errorf("failed to parse config: %w", err)
+	}
+
+	return &cfg, nil
+}
+
+func Save(cfg *Config) error {
+	configPath, err := GetConfigPath()
+	if err != nil {
+		return err
+	}
+
+	configDir := filepath.Dir(configPath)
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return fmt.Errorf("failed to create config directory: %w", err)
+	}
+
+	data, err := yaml.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("failed to marshal config: %w", err)
+	}
+
+	if err := os.WriteFile(configPath, data, 0644); err != nil {
+		return fmt.Errorf("failed to write config file: %w", err)
+	}
+
+	return nil
+}
