@@ -2,9 +2,9 @@ name: "CodeQL Advanced Security"
 
 on:
   push:
-    branches: [ '**' ]
+    branches: [ 'master', 'main' ]  # Only run on push to main branches
   pull_request:
-    branches: [ '**' ]
+    branches: [ '**' ]  # Run on all PRs (this covers feature branch pushes)
   schedule:
     # Run CodeQL analysis weekly on Wednesdays at 3am UTC
     - cron: '0 3 * * 3'
@@ -17,7 +17,7 @@ permissions:
 jobs:
   analyze:
     name: Analyze Code
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Needs to compile Windows-specific code
     timeout-minutes: 360
 
     strategy:

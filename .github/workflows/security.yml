@@ -2,9 +2,9 @@ name: Security Scans
 
 on:
   push:
-    branches: [ '**' ]  # Run on push to any branch
+    branches: [ 'master', 'main' ]  # Only run on push to main branches
   pull_request:
-    branches: [ '**' ]  # Run on PRs to any branch
+    branches: [ '**' ]  # Run on all PRs (this covers feature branch pushes)
   schedule:
     # Run weekly on Mondays at 9am UTC
     - cron: '0 9 * * 1'
@@ -46,10 +46,11 @@ jobs:
         with:
           go-version: '1.25'
 
+      - name: Install Gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+
       - name: Run Gosec
-        uses: securego/gosec@master
-        with:
-          args: '-fmt sarif -out gosec-results.sarif ./...'
+        run: gosec -fmt sarif -out gosec-results.sarif ./...
 
       - name: Upload Gosec results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
