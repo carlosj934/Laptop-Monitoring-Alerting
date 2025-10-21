@@ -2,6 +2,9 @@
 
 A lightweight Windows system tray application for monitoring laptop health and sending intelligent alerts via native Windows toast notifications.
 
+# Example
+![Example of Desktop Notification after exceeding 90% memory usage](./images/example.png)
+
 ## Overview
 
 Laptop Monitor is a native Go application that runs silently in your Windows system tray, continuously monitoring CPU, memory, and disk usage. When resource thresholds are exceeded, it sends non-intrusive Windows toast notifications to keep you informed about your system's health.
