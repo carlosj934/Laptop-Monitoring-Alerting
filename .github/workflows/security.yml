@@ -21,7 +21,7 @@ jobs:
     runs-on: windows-latest  # Needs to compile Windows-specific code
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -39,7 +39,7 @@ jobs:
     runs-on: windows-latest  # Needs to compile Windows-specific code
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -63,7 +63,7 @@ jobs:
     runs-on: windows-latest  # Needs to compile Windows-specific code
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -81,7 +81,7 @@ jobs:
     runs-on: windows-latest  # Needs to compile Windows-specific code
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest  # File-based scan, doesn't need compilation
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Full history for better secret detection
 
@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest  # File-based scan, doesn't need compilation
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
@@ -141,7 +141,7 @@ jobs:
       image: semgrep/semgrep
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run Semgrep
         run: semgrep scan --config auto --sarif --output semgrep-results.sarif
@@ -158,7 +158,7 @@ jobs:
     runs-on: windows-latest  # Needs to compile and run Windows-specific tests
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -179,7 +179,7 @@ jobs:
     runs-on: windows-latest  # Building Windows executable
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
