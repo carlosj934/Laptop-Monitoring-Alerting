@@ -1,0 +1,53 @@
+name: "CodeQL Advanced Security"
+
+on:
+  push:
+    branches: [ 'master', 'main' ]  # Only run on push to main branches
+  pull_request:
+    branches: [ '**' ]  # Run on all PRs (this covers feature branch pushes)
+  schedule:
+    # Run CodeQL analysis weekly on Wednesdays at 3am UTC
+    - cron: '0 3 * * 3'
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze Code
+    runs-on: windows-latest  # Needs to compile Windows-specific code
+    timeout-minutes: 360
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'go' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      # Initializes the CodeQL tools for scanning
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # Query suites: default, security-extended, security-and-quality
+          queries: security-and-quality
+
+      # Autobuild attempts to build any compiled languages (Go, C/C++, C#, etc.)
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      # Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
