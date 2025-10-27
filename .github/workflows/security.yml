@@ -169,7 +169,7 @@ jobs:
         run: go test -race -coverprofile=coverage.out ./...
 
       - name: Upload coverage to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-report
           path: coverage.out
@@ -190,7 +190,7 @@ jobs:
         run: go build -ldflags="-s -w" -o laptop-monitor.exe ./cmd/monitor
 
       - name: Upload Windows binary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: laptop-monitor-windows
           path: laptop-monitor.exe
